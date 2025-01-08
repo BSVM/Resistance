@@ -1,0 +1,18 @@
+Package: Resistance
+Title: Package for the analysis of kdr mutations in Aedes aegypti
+Version: 0.0.0.1
+Authors@R: 
+    person("Bryan", "Valencia", , "Bryan.marin@ufpr.br", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: What the package does (one paragraph).
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Depends: 
+    R (>= 2.10)
+Imports:
+    dplyr,
+    tidyr,
+    ggplot2
+LazyData: true
