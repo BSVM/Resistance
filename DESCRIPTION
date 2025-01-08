@@ -16,3 +16,5 @@ Imports:
     tidyr,
     ggplot2
 LazyData: true
+URL: https://github.com/BSVM/Resistance
+BugReports: https://github.com/BSVM/Resistance/issues
