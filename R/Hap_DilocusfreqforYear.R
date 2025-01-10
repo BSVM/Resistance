@@ -5,7 +5,6 @@
 #'
 #' @return Tabla con las frecuencias haplotipicas del pais por año
 #'
-#'
 #' @importFrom dplyr group_by
 #' @importFrom dplyr filter
 #' @importFrom dplyr summarise
@@ -52,3 +51,4 @@ Hap_DilocusfreqforYear <- function(data, pais) {
 
 #devtools::document()
 
+#usethis::use_git_config(user.name = "BSVM", user.email = "bryan.marin@ufpr.br")
