@@ -1,5 +1,5 @@
 Package: Resistance
-Title: Package for the analysis of kdr mutations in Aedes aegypti
+Title: Toolkit for Workflow Analysis of KDR Mutations in Aedes aegypti
 Version: 0.0.0.1
 Authors@R: 
     person("Bryan", "Valencia", , "Bryan.marin@ufpr.br", role = c("aut", "cre"),
