@@ -35,12 +35,12 @@
 #'  aabb = c(0, 0))
 #'
 #'  # Calcular las frecuencias dilocus para cada población
-#'  resultados <- Freq_Diloc(dilocus_table)
+#'  Df2 <- Freq_All_Diloc(dilocus_table)
 #'
 #'  # Mostrar los resultados
-#'  print(resultados)
+#'  print(Df2)
 #' @export
-Freq_Diloc <- function(tabla) {
+Freq_All_Diloc <- function(tabla) {
   # Validación: asegurar que la tabla tenga las columnas necesarias
   RG <- c("AABB", "AABb", "AAbb", "AaBB", "AaBb", "Aabb", "aaBB", "aaBb", "aabb", "Pop")
 
