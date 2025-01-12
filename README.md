@@ -12,6 +12,7 @@ Asegúrese de tener instalado el paquete `devtools`. Puede verificarlo y, si es 
 if (!requireNamespace("devtools", quietly = TRUE)) {
   install.packages("devtools")
 }
+```
 Paso 2: Cargar el paquete devtools
 Cargue el paquete devtools para instalar paquetes desde GitHub:
 
