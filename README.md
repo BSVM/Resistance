@@ -13,13 +13,13 @@ if (!requireNamespace("devtools", quietly = TRUE)) {
   install.packages("devtools")
 }
 ```
-###Paso 2: Cargar el paquete devtools
+### Paso 2: Cargar el paquete devtools
 Cargue el paquete devtools para instalar paquetes desde GitHub:
 
 ```R
 library(devtools)
 ```
-###Paso 3: Instalar el paquete Resistance
+### Paso 3: Instalar el paquete Resistance
 
 Instale el paquete Resistance directamente desde GitHub con el siguiente comando:
 
@@ -27,7 +27,7 @@ Instale el paquete Resistance directamente desde GitHub con el siguiente comando
 ```R
 devtools::install_github("usuario/Resistance")
 ```
-###Paso 4: Cargar el paquete Resistance
+### Paso 4: Cargar el paquete Resistance
 
 Después de instalarlo, cargue el paquete para comenzar a usarlo:
 
