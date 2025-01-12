@@ -1,15 +1,15 @@
-#' Calcular frecuencia genotipica de un marcador dilocus
+#' Calcular frecuencia genotípica de un marcador dilocus
 #'
-#' Esta funcion calcula las frecuencias genotipicas para un marcador genetico dilocus
-#' en una poblacion, basado en los genotipos observados en los individuos.
+#' Esta función calcula las frecuencias genotípicas para un marcador genético dilocus
+#' en una población, basado en los genotipos observados en los individuos.
 #'
 #' @param Data Un data frame que contiene los datos geneticos. Debe incluir al menos
-#' las columnas `Pop` (identificador de la poblacion) y las columnas de genotipos:
-#' `AA`, `Aa`, `aa`, `BB`, `Bb`, `bb`, que indican la presencia de cada combinacion alelica.
+#' las columnas `Pop` (identificador de la población) y las columnas de genotipos:
+#' `AA`, `Aa`, `aa`, `BB`, `Bb`, `bb`, que indican la presencia de cada combinación alelica.
 #'
-#' @return Una matriz en la que cada fila corresponde a una poblacion y cada columna
+#' @return Una matriz en la que cada fila corresponde a una población y cada columna
 #' representa un genotipo posible (`AABB`, `AABb`, etc.). Las celdas contienen las frecuencias
-#' absolutas (conteos) de cada genotipo en cada poblacion.
+#' absolutas (conteos) de cada genotipo en cada población.
 #'
 #' @export
 #'
@@ -27,6 +27,7 @@
 #'
 #' # Not Run
 #' GenDiLoc(df)
+#'
 GenDiLoc <- function(Data) {
   # Create a new column 'Genotype' based on the conditions
   Data$Genotype <- with(Data, ifelse(AA == "X" & BB == "X", "AABB",

@@ -28,14 +28,21 @@ The function performs several checks to ensure data integrity:
 }
 \examples{
 
-# Example 1: Provides a matrix indicating the genotype for 12 individuals
+# Example 1: Provides a matrix indicating the genotype for 12 individuals for 1 population
 
 df <- data.frame(
   ID = 1:12,
-  aa = c(0, 0, 0, 0, "X", 0, 0, 0, 0, 0, 0, "X"),
+  Pop = rep("Pop1", 12),
+  AA = c(0, 0, 0, 0, "X", 0, 0, 0, 0, 0, 0, "X"),
   Aa = c("X", 0, "X", "X", 0, "X", "X", "X", "X", "X", "X", 0),
-  AA = c(0, "X", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
+  aa = c(0, "X", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
+
 
 Import_single_loc(df)
+
+
+# Example 2: Provides a matrix indicating the genotype for 106 individuals in 3 populations
+
+Import_single_loc(Loc1Pops3)
 
 }

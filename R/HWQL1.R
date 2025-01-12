@@ -18,68 +18,75 @@
 #'
 #' @importFrom stats pchisq
 #'
-#' @export
 #'
 #' @examples
-#' # Ejemplo con un conjunto de datos de conteos genotípicos
-#' mi_tabla <- c(AA = 4, Aa = 33, aa = 3)
-#' resultados_HWQ <- calculate_HWQ(mi_tabla)
-#' print(resultados_HWQ)
+#' # Ejemplo con un conjunto de datos de conteos genotipicos para una sola poblacion
+#' df1 <- data.frame(
+#'  Pop = c("Pop1"),
+#'  aa = c(8),
+#'  Aa = c(43),
+#'  AA = c(25))
 #'
-#' # También puedes obtener los conteos observados y las frecuencias esperadas
-#' resultados_HWQ$Expected_Frequencies
-#' resultados_HWQ$Observed_Counts
+#' HWQL1(df1)
 #'
-calculate_HWQ <- function(genotype_counts) {
-  # Calcular frecuencias usando la función anterior
-  frequencies <- Single_locus_frequencies(genotype_counts)
-
-  # Extraer frecuencias y el total de individuos
-  genotypic_freqs <- frequencies$genotypic_frequencies
-  p <- frequencies$allelic_frequencies$Frequency[1]
-  q <- frequencies$allelic_frequencies$Frequency[2]
-  total_individuals <- frequencies$total_individuals
-
-  # Calcular las frecuencias esperadas según Hardy-Weinberg
-  expected_freq_AA <- p^2
-  expected_freq_Aa <- 2 * p * q
-  expected_freq_aa <- q^2
-
-  # Escalar las frecuencias esperadas a conteos (sin redondeo)
-  expected_counts <- c(
-    AA = expected_freq_AA * total_individuals,
-    Aa = expected_freq_Aa * total_individuals,
-    aa = expected_freq_aa * total_individuals
+#'
+#'# Ejemplo de uso con un conjunto de datos de conteos genotípicos para múltiples poblaciones
+#'
+#'df2 <- data.frame(
+#'  Pop = c("Pop 1", "Pop 2", "Pop 3"),
+#'  aa = c(3, 0, 1),
+#'  Aa = c(33, 39, 22),
+#'  AA = c(4, 2, 7))
+#'
+#'  HWQL1(df2)
+#'
+#' @export
+HWQL1 <- function(genotype_counts) {
+  result_df <- data.frame(
+    Population = character(0),
+    n = integer(0),
+    aa = numeric(0),
+    Aa = numeric(0),
+    AA = numeric(0),
+    Freq_A = numeric(0),
+    Freq_a = numeric(0),
+    `X2 (df)` = character(0),
+    P_Value = numeric(0),
+    stringsAsFactors = FALSE
   )
 
-  # Conteos observados
-  observed_counts <- genotype_counts
+  for (i in 1:nrow(genotype_counts)) {
+    freq_matrix <- genotype_counts[i, , drop = FALSE]
+    frequencies <- Single_loc_freq(freq_matrix)
 
-  # Calcular el estadístico de chi-cuadrado
-  chi_squared <- sum((observed_counts - expected_counts)^2 / expected_counts)
+    genotypic_freqs <- frequencies[, c("aa", "Aa", "AA")]
+    p <- frequencies$Freq_A
+    q <- frequencies$Freq_a
+    total_individuals <- frequencies$n
+    expected_freq_AA <- p^2
+    expected_freq_Aa <- 2 * p * q
+    expected_freq_aa <- q^2
+    expected_counts <- c(
+      AA = expected_freq_AA * total_individuals,
+      Aa = expected_freq_Aa * total_individuals,
+      aa = expected_freq_aa * total_individuals
+    )
+    observed_counts <- as.numeric(genotype_counts[i, c("AA", "Aa", "aa")])
+    chi_squared <- sum((observed_counts - expected_counts)^2 / expected_counts)
+    p_value <- pchisq(chi_squared, df = 1, lower.tail = FALSE)
 
-  # Obtener el p-valor de la prueba chi-cuadrado
-  p_value <- pchisq(chi_squared, df = 1, lower.tail = FALSE)
+    result_df <- rbind(result_df, data.frame(
+      Population = genotype_counts$Pop[i],
+      n = total_individuals,
+      aa = round(genotypic_freqs$aa, 5),
+      Aa = round(genotypic_freqs$Aa, 5),
+      AA = round(genotypic_freqs$AA, 5),
+      Freq_A = round(p, 5),
+      Freq_a = round(q, 5),
+      `X2 (df)` = paste0(round(chi_squared, 5), " (1)"),
+      P_Value = round(p_value, 5)
+    ))
+  }
 
-  # Devolver los resultados de la prueba con un formato más limpio
-  list(
-    Total_Individuals = total_individuals,
-    Genotypic_Frequencies = genotypic_freqs,
-    Allelic_Frequencies = frequencies$allelic_frequencies,
-    Expected_Frequencies = data.frame(
-      Genotype = c("AA", "Aa", "aa"),
-      Expected_Frequency = c(expected_freq_AA, expected_freq_Aa, expected_freq_aa),
-      Expected_Counts = expected_counts
-    ),
-    Observed_Counts = data.frame(
-      Genotype = c("AA", "Aa", "aa"),
-      Observed_Count = observed_counts
-    ),
-    Chi_Squared = chi_squared,
-    P_Value = p_value
-  )
+  return(result_df)
 }
-
-#devtools::load_all()
-
-#devtools::document()
