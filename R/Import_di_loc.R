@@ -160,5 +160,5 @@ Import_di_loc <- function(df) {
   # If all checks pass, proceed with the second analysis using GenDiLoc
   result <- GenDiLoc(df)
 
-  return(list(MolocusGenotipes = data.frame(freq_matrix), DilocusGenotypesMatrix = data.frame(result)))
+  return(list(MonGts = data.frame(freq_matrix), DicGtps = data.frame(result)))
 }

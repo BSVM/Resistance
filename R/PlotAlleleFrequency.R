@@ -1,7 +1,7 @@
 #' Plot Allele Frequencies by Population
 #'
 #' This function creates a bar plot of allele frequencies by population. It can handle two types of input data structures,
-#' specified by the `Loc` argument.
+#' specified by the Loc argument.
 #'
 #' @param data A data frame containing the population, allele, and frequency data.
 #' @param Loc An integer (1 or 2) indicating the type of input data structure.
@@ -44,11 +44,9 @@
 #' )
 #'
 #' dataf2 <- RestructureAlleleFreq(data2, Loc = 2)
-#'
 #' PlotAlleleFrequency(dataf2, Loc = 2)
-PlotAlleleFrequency <- function(data, Loc = 1) {
-
-  # Data input checks common for both types
+PlotAlleleFrequency <- function(data, Loc = 2) {
+  # Common data input checks for both types
   if (!is.data.frame(data)) {
     stop("The 'data' argument must be a data frame.")
   }
@@ -69,7 +67,7 @@ PlotAlleleFrequency <- function(data, Loc = 1) {
 
     # Create the plot for Loc = 1
     plot <- ggplot(data, aes(x = Population, y = Frequency, fill = Allele)) +
-      geom_bar(stat = "identity", position = "stack", color = "black", size = 0.5) +
+      geom_bar(stat = "identity", position = "stack", color = "black", linewidth = 0.5) +
       scale_fill_manual(values = c("A" = "#FF6347", "a" = "#4682B4")) +
       labs(x = "Population", y = "Allele Frequency", fill = "Allele") +
       theme_bw() +
@@ -95,8 +93,8 @@ PlotAlleleFrequency <- function(data, Loc = 1) {
     data$Allele <- factor(data$Allele, levels = allele_order)
 
     # Create the plot for Loc = 2
-    plot <- ggplot(data, aes(x = Population, y = Frequency, fill = Allele)) +
-      geom_bar(stat = "identity", position = "stack", color = "black", size = 0.5) +
+    plot <- ggplot(data, aes(x = data$Population, y = data$Frequency, fill = data$Allele)) +
+      geom_bar(stat = "identity", position = "stack", color = "black", linewidth = 0.5) +
       scale_fill_manual(values = c("ab" = "#1E90FF", "aB" = "yellow", "AB" = "red", "Ab" = "darkblue")) +
       labs(x = "Population", y = "Frequency Haplotypes", fill = "Allele") +
       theme_bw() +
@@ -113,3 +111,4 @@ PlotAlleleFrequency <- function(data, Loc = 1) {
   # Print the plot
   print(plot)
 }
+

@@ -4,7 +4,7 @@
 \alias{PlotAlleleFrequency}
 \title{Plot Allele Frequencies by Population}
 \usage{
-PlotAlleleFrequency(data, Loc = 1)
+PlotAlleleFrequency(data, Loc = 2)
 }
 \arguments{
 \item{data}{A data frame containing the population, allele, and frequency data.}
@@ -20,7 +20,7 @@ A ggplot object representing the bar plot of allele frequencies by population.
 }
 \description{
 This function creates a bar plot of allele frequencies by population. It can handle two types of input data structures,
-specified by the \code{Loc} argument.
+specified by the Loc argument.
 }
 \examples{
 
@@ -44,6 +44,5 @@ data2 <- data.frame(
 )
 
 dataf2 <- RestructureAlleleFreq(data2, Loc = 2)
-
 PlotAlleleFrequency(dataf2, Loc = 2)
 }
