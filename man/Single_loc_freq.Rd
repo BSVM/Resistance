@@ -2,49 +2,47 @@
 % Please edit documentation in R/Single_loc_freq.R
 \name{Single_loc_freq}
 \alias{Single_loc_freq}
-\title{Calcular frecuencias genotípicas y alélicas}
+\title{Calculate Genotypic and Allelic Frequencies}
 \usage{
 Single_loc_freq(freq_matrix)
 }
 \arguments{
-\item{freq_matrix}{Un data frame con las siguientes columnas:
+\item{freq_matrix}{A data frame with the following columns:
 \describe{
-\item{Pop}{Un identificador para cada población (e.g., "Pop1", "Pop2").}
-\item{aa}{El conteo de individuos con el genotipo aa.}
-\item{Aa}{El conteo de individuos con el genotipo Aa.}
-\item{AA}{El conteo de individuos con el genotipo AA.}
+\item{Pop}{A unique identifier for each population (e.g., "Pop1", "Pop2").}
+\item{aa}{The count of individuals with the genotype aa.}
+\item{Aa}{The count of individuals with the genotype Aa.}
+\item{AA}{The count of individuals with the genotype AA.}
 }}
 }
 \value{
-Un data frame con las siguientes columnas:
+A data frame with the following columns:
 \describe{
-\item{Population}{El identificador de la población.}
-\item{n}{El número total de individuos considerados en los cálculos.}
-\item{aa}{La frecuencia genotípica de individuos con el genotipo aa.}
-\item{Aa}{La frecuencia genotípica de individuos con el genotipo Aa.}
-\item{AA}{La frecuencia genotípica de individuos con el genotipo AA.}
-\item{Freq_A}{La frecuencia alélica del alelo A.}
-\item{Freq_a}{La frecuencia alélica del alelo a.}
+\item{Population}{The identifier for each population.}
+\item{n}{The total number of individuals considered in the calculations.}
+\item{aa}{The genotypic frequency of individuals with the aa genotype.}
+\item{Aa}{The genotypic frequency of individuals with the Aa genotype.}
+\item{AA}{The genotypic frequency of individuals with the AA genotype.}
+\item{Freq_A}{The allelic frequency of allele A.}
+\item{Freq_a}{The allelic frequency of allele a.}
 }
 }
 \description{
-Esta función calcula las frecuencias genotípicas y alélicas a partir de una matriz que contiene los conteos de genotipos (AA, Aa, aa) por población.
+This function calculates the genotypic and allelic frequencies from a matrix containing genotype counts (AA, Aa, aa) for each population.
 }
 \examples{
-# Ejemplo: Matriz de frecuencias genotípicas para una población
+# Example: Genotypic frequency matrix for a single population
 freq_matrix <- data.frame(
   Pop = c("Pop1"),
   aa = c(2),
   Aa = c(9),
   AA = c(1))
 
-# Calcular frecuencias
+# Calculate frequencies
 Single_loc_freq(freq_matrix)
 
-# Ejemplo: Matriz de frecuencias genotípicas para multiples poblaciones
+# Example: Genotypic frequency matrix for multiple populations
+df2 <- Import_single_loc(Loc1Pops3)
+Single_loc_freq(df2)
 
-
-  df2 <- Import_single_loc(Loc1Pops3)
-
-  Single_loc_freq(df2)
 }

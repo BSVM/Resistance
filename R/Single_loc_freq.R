@@ -1,46 +1,77 @@
-#' Calcular frecuencias genotípicas y alélicas
+#' Calculate Genotypic and Allelic Frequencies
 #'
-#' Esta función calcula las frecuencias genotípicas y alélicas a partir de una matriz que contiene los conteos de genotipos (AA, Aa, aa) por población.
+#' This function calculates the genotypic and allelic frequencies from a matrix containing genotype counts (AA, Aa, aa) for each population.
 #'
-#' @param freq_matrix Un data frame con las siguientes columnas:
+#' @param freq_matrix A data frame with the following columns:
 #' \describe{
-#'   \item{Pop}{Un identificador para cada población (e.g., "Pop1", "Pop2").}
-#'   \item{aa}{El conteo de individuos con el genotipo aa.}
-#'   \item{Aa}{El conteo de individuos con el genotipo Aa.}
-#'   \item{AA}{El conteo de individuos con el genotipo AA.}
+#'   \item{Pop}{A unique identifier for each population (e.g., "Pop1", "Pop2").}
+#'   \item{aa}{The count of individuals with the genotype aa.}
+#'   \item{Aa}{The count of individuals with the genotype Aa.}
+#'   \item{AA}{The count of individuals with the genotype AA.}
 #' }
 #'
-#' @return Un data frame con las siguientes columnas:
+#' @return A data frame with the following columns:
 #' \describe{
-#'   \item{Population}{El identificador de la población.}
-#'   \item{n}{El número total de individuos considerados en los cálculos.}
-#'   \item{aa}{La frecuencia genotípica de individuos con el genotipo aa.}
-#'   \item{Aa}{La frecuencia genotípica de individuos con el genotipo Aa.}
-#'   \item{AA}{La frecuencia genotípica de individuos con el genotipo AA.}
-#'   \item{Freq_A}{La frecuencia alélica del alelo A.}
-#'   \item{Freq_a}{La frecuencia alélica del alelo a.}
+#'   \item{Population}{The identifier for each population.}
+#'   \item{n}{The total number of individuals considered in the calculations.}
+#'   \item{aa}{The genotypic frequency of individuals with the aa genotype.}
+#'   \item{Aa}{The genotypic frequency of individuals with the Aa genotype.}
+#'   \item{AA}{The genotypic frequency of individuals with the AA genotype.}
+#'   \item{Freq_A}{The allelic frequency of allele A.}
+#'   \item{Freq_a}{The allelic frequency of allele a.}
 #' }
 #'
 #' @examples
-#' # Ejemplo: Matriz de frecuencias genotípicas para una población
+#' # Example: Genotypic frequency matrix for a single population
 #' freq_matrix <- data.frame(
 #'   Pop = c("Pop1"),
 #'   aa = c(2),
 #'   Aa = c(9),
 #'   AA = c(1))
 #'
-#' # Calcular frecuencias
+#' # Calculate frequencies
 #' Single_loc_freq(freq_matrix)
 #'
-#'# Ejemplo: Matriz de frecuencias genotípicas para multiples poblaciones
+#' # Example: Genotypic frequency matrix for multiple populations
+#' df2 <- Import_single_loc(Loc1Pops3)
+#' Single_loc_freq(df2)
 #'
-#'
-#'   df2 <- Import_single_loc(Loc1Pops3)
-#'
-#'   Single_loc_freq(df2)
 #' @export
 Single_loc_freq <- function(freq_matrix) {
-  # Crear un dataframe vacío para almacenar los resultados
+  # Check if the input is a data frame
+  if (!is.data.frame(freq_matrix)) {
+    stop("The argument 'freq_matrix' must be a data frame.")
+  }
+
+  # Required columns
+  required_columns <- c("Pop", "aa", "Aa", "AA")
+  if (!all(required_columns %in% colnames(freq_matrix))) {
+    stop("The frequency matrix must contain the columns: 'Pop', 'aa', 'Aa', and 'AA'.")
+  }
+
+  # Check data types
+  if (!all(sapply(freq_matrix[, c("aa", "Aa", "AA")], function(x) is.numeric(x) && all(x == floor(x))))) {
+    stop("The values in the columns 'aa', 'Aa', and 'AA' must be integers.")
+  }
+
+  # Additional validations
+  if (any(freq_matrix[, c("AA", "Aa", "aa")] < 0)) {
+    stop("The values in the columns 'AA', 'Aa', and 'aa' cannot be negative.")
+  }
+  if (any(is.na(freq_matrix[, c("AA", "Aa", "aa")]))) {
+    stop("The values in the columns 'AA', 'Aa', and 'aa' cannot be NA.")
+  }
+  if (any(rowSums(freq_matrix[, c("AA", "Aa", "aa")]) == 0)) {
+    stop("The total number of individuals per population cannot be zero.")
+  }
+  if (any(is.na(freq_matrix$Pop) | freq_matrix$Pop == "")) {
+    stop("The 'Pop' column cannot contain empty or NA values.")
+  }
+  if (length(unique(freq_matrix$Pop)) != nrow(freq_matrix)) {
+    stop("The population identifiers in the 'Pop' column must be unique.")
+  }
+
+  # Create the result data frame
   result_df <- data.frame(
     Pop = character(0),
     n = integer(0),
@@ -52,30 +83,22 @@ Single_loc_freq <- function(freq_matrix) {
     stringsAsFactors = FALSE
   )
 
-  # Iterar sobre cada fila de la matriz de frecuencias por población
+  # Calculate frequencies by population
   for (i in 1:nrow(freq_matrix)) {
-    # Extraer los conteos de genotipos para cada población
-    genotype_counts <- as.numeric(freq_matrix[i, c("aa", "Aa", "AA")])
-
-    # Calcular el número total de individuos
+    genotype_counts <- as.numeric(freq_matrix[i, c("AA", "Aa", "aa")])
     total_individuals <- sum(genotype_counts)
-
-    # Calcular las frecuencias genotípicas
-    freq_AA <- genotype_counts[3] / total_individuals
+    freq_AA <- genotype_counts[1] / total_individuals
     freq_Aa <- genotype_counts[2] / total_individuals
-    freq_aa <- genotype_counts[1] / total_individuals
+    freq_aa <- genotype_counts[3] / total_individuals
+    p <- (genotype_counts[1] + 0.5 * genotype_counts[2]) / total_individuals
+    q <- 1 - p
 
-    # Calcular las frecuencias alélicas
-    p <- (genotype_counts[3] + 0.5 * genotype_counts[2]) / total_individuals  # Frecuencia del alelo A
-    q <- 1 - p  # Frecuencia del alelo a
-
-    # Almacenar los resultados en el dataframe
     result_df <- rbind(result_df, data.frame(
       Pop = freq_matrix$Pop[i],
       n = total_individuals,
-      aa = freq_aa,
-      Aa = freq_Aa,
       AA = freq_AA,
+      Aa = freq_Aa,
+      aa = freq_aa,
       Freq_A = p,
       Freq_a = q
     ))
@@ -83,7 +106,3 @@ Single_loc_freq <- function(freq_matrix) {
 
   return(result_df)
 }
-
-# devtools::load_all()
-
-# devtools::document()

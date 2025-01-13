@@ -34,20 +34,34 @@
 #'
 #'df2 <- data.frame(
 #'  Pop = c("Pop 1", "Pop 2", "Pop 3"),
-#'  aa = c(3, 0, 1),
+#'  AA = c(4, 0, 1),
 #'  Aa = c(33, 39, 22),
-#'  AA = c(4, 2, 7))
+#'  aa = c(3, 2, 7))
 #'
 #'  HWQL1(df2)
 #'
 #' @export
+#'
 HWQL1 <- function(genotype_counts) {
+  # Input validation
+  required_columns <- c("Pop", "AA", "Aa", "aa")
+  if (!all(required_columns %in% colnames(genotype_counts))) {
+    stop("The data frame 'genotype_counts' must contain the columns: Pop, AA, Aa, aa")
+  }
+  if (!all(sapply(genotype_counts[, c("AA", "Aa", "aa")], is.numeric))) {
+    stop("The columns AA, Aa, and aa must contain numeric values")
+  }
+  if (any(genotype_counts[, c("AA", "Aa", "aa")] < 0, na.rm = TRUE)) {
+    stop("The columns AA, Aa, and aa must contain non-negative values")
+  }
+
+  # Initialize the results data frame
   result_df <- data.frame(
     Population = character(0),
-    n = integer(0),
-    aa = numeric(0),
-    Aa = numeric(0),
+    n = numeric(0),
     AA = numeric(0),
+    Aa = numeric(0),
+    aa = numeric(0),
     Freq_A = numeric(0),
     Freq_a = numeric(0),
     `X2 (df)` = character(0),
@@ -55,11 +69,19 @@ HWQL1 <- function(genotype_counts) {
     stringsAsFactors = FALSE
   )
 
+  # Loop to process each row
   for (i in 1:nrow(genotype_counts)) {
     freq_matrix <- genotype_counts[i, , drop = FALSE]
+
+    # Missing value check
+    if (any(is.na(freq_matrix[, c("AA", "Aa", "aa")]))) {
+      warning(paste("Missing values in population:", genotype_counts$Pop[i]))
+      next
+    }
+
     frequencies <- Single_loc_freq(freq_matrix)
 
-    genotypic_freqs <- frequencies[, c("aa", "Aa", "AA")]
+    genotypic_freqs <- frequencies[, c("AA", "Aa", "aa")]
     p <- frequencies$Freq_A
     q <- frequencies$Freq_a
     total_individuals <- frequencies$n
@@ -72,15 +94,22 @@ HWQL1 <- function(genotype_counts) {
       aa = expected_freq_aa * total_individuals
     )
     observed_counts <- as.numeric(genotype_counts[i, c("AA", "Aa", "aa")])
+
+    # Check that expected values are not zero before calculating chi-squared
+    if (any(expected_counts == 0)) {
+      warning(paste("Expected count is zero in population:", genotype_counts$Pop[i]))
+      next
+    }
+
     chi_squared <- sum((observed_counts - expected_counts)^2 / expected_counts)
     p_value <- pchisq(chi_squared, df = 1, lower.tail = FALSE)
 
     result_df <- rbind(result_df, data.frame(
       Population = genotype_counts$Pop[i],
       n = total_individuals,
-      aa = round(genotypic_freqs$aa, 5),
+      aa = round(genotypic_freqs$AA, 5),
       Aa = round(genotypic_freqs$Aa, 5),
-      AA = round(genotypic_freqs$AA, 5),
+      AA = round(genotypic_freqs$aa, 5),
       Freq_A = round(p, 5),
       Freq_a = round(q, 5),
       `X2 (df)` = paste0(round(chi_squared, 5), " (1)"),

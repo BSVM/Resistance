@@ -40,9 +40,9 @@ HWQL1(df1)
 
 df2 <- data.frame(
  Pop = c("Pop 1", "Pop 2", "Pop 3"),
- aa = c(3, 0, 1),
+ AA = c(4, 0, 1),
  Aa = c(33, 39, 22),
- AA = c(4, 2, 7))
+ aa = c(3, 2, 7))
 
  HWQL1(df2)
 
