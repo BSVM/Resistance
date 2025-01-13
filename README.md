@@ -60,6 +60,25 @@ Nota: Opcionalmente el paquete proporciona una matriz de datos "Loc1Pops3" para 
 print (Loc1Pops3) # Muestra la estructura de los datos originales
 
 ```
+### Estructura de los datos originales
+
+La tabla `Loc1Pops3` tiene la siguiente estructura:
+
+| ID     | Pop   | AA   | Aa   | aa   |
+|--------|-------|------|------|------|
+| Cur 1  | Pop 1 | 0    | X    | 0    |
+| Cur 2  | Pop 1 | 0    | X    | 0    |
+| Cur 3  | Pop 1 | 0    | X    | 0    |
+| Cur 4  | Pop 1 | 0    | X    | 0    |
+| Cur 5  | Pop 1 | 0    | X    | 0    |
+| Cur 6  | Pop 1 | 0    | X    | 0    |
+| Cur 7  | Pop 1 | 0    | X    | 0    |
+| Cur 8  | Pop 1 | 0    | X    | 0    |
+| Cur 9  | Pop 1 | 0    | X    | 0    |
+| Cur 10 | Pop 1 | 0    | X    | 0    |
+| ...    | ...   | ...  | ...  | ...  |
+
+    **Total de filas**: 111
 
 Calcular Frecuencias Genotípicas (AA, Aa y aa) de la poblacion o poblaciones, utilizaran las funcion llamada "Import_single_loc",
 esta funcion hace un conteo de cada genotipo por poblacion, utilizando la informacion de presencia "X" y ausencia "O".
@@ -71,16 +90,25 @@ df1 <- Import_single_loc(Loc1Pops3)
 print (df1)
 
 ```
-A partir de la matriz de conteo, se calcularan las frecuencias genotípicas (AA, Aa y aa ) y alélicas (alelo A y alelo a), utilizando la función Single_locus_frequencies:
+La tabla `df1` tiene la siguiente estructura:
+
+| Pop   | AA | Aa  | aa  |
+|-------|----|-----|-----|
+| Pop 1 | 4  | 33  | 3   |
+| Pop 2 | 2  | 39  | 0   |
+| Pop 3 | 7  | 22  | 1   |
+
+
+A partir de la matriz de conteo `df1` , se calcularan las frecuencias genotípicas (AA, Aa y aa ) y alélicas (alelo A y alelo a), utilizando la función Single_locus_frequencies:
 
 ```R
 
-df2 < Single_loc_freq(df1)
+df2 <- Single_loc_freq(df1)
 
 print(df2)
 
 ```
-
+La tabla `df2` tiene la siguiente estructura:
 | Pop   |  n   |    aa      |    Aa     |    AA     |  Freq_A   |  Freq_a   |
 |-------|------|------------|-----------|-----------|-----------|-----------|
 | Pop 1 |  40  | 0.07500    | 0.82500   | 0.10000   | 0.51250   | 0.48750   |
@@ -88,9 +116,10 @@ print(df2)
 | Pop 3 |  30  | 0.03333    | 0.73333   | 0.23333   | 0.60000   | 0.40000   |
 
 
-Para realizar un test de Equilibrio de Hardy-Weinberg, utilizaremos la matriz de conteo de genotipos df1.
+Para realizar un test de Equilibrio de Hardy-Weinberg, utilizaremos la matriz de conteo de genotipos `df1` 
 
 ```R
+
 resultados_HWQ <- HWQL1(df1)
 
 print(resultados_HWQ)
@@ -98,6 +127,13 @@ print(resultados_HWQ)
 
 ```
 Obtendran una tabla por todos los resultados, incluyendo el resultado del test chi quedrado con su respectivo p-valor
+
+| Population | n  | aa     | Aa     | AA     | Freq_A | Freq_a | X2..df.       | P_Value |
+|------------|----|--------|--------|--------|--------|--------|---------------|---------|
+| Pop 1      | 40 | 0.07500 | 0.82500 | 0.10000 | 0.51250 | 0.48750 | 16.9537 (1)   | 0.00004 |
+| Pop 2      | 41 | 0.00000 | 0.95122 | 0.04878 | 0.52439 | 0.47561 | 33.72688 (1)  | 0.00000 |
+| Pop 3      | 30 | 0.03333 | 0.73333 | 0.23333 | 0.60000 | 0.40000 | 8.35648 (1)   | 0.00384 |
+
 
 ### Finalmente a partir de la matriz de datos de genotipos y alelos "df2" se puede graficar la frecuencia alelica por poblacion utilizando la funcion
 
