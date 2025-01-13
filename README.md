@@ -76,13 +76,12 @@ La tabla `Loc1Pops3` tiene la siguiente estructura:
 | Cur 8  | Pop 1 | 0    | X    | 0    |
 | Cur 9  | Pop 1 | 0    | X    | 0    |
 | Cur 10 | Pop 1 | 0    | X    | 0    |
-| ...    | ...   | ...  | ...  | ...  |
+| 11 filas   | ...   | ...  | ...  | ...  |
 
-    **Total de filas**: 111
 
-Calcular Frecuencias Genotípicas (AA, Aa y aa) de la poblacion o poblaciones, utilizaran las funcion llamada "Import_single_loc",
-esta funcion hace un conteo de cada genotipo por poblacion, utilizando la informacion de presencia "X" y ausencia "O".
-Obtendremos una matriz llamda "df" que contiene el conteo de cuanto individuos presentan cada uno de los genotipos en la poblacion o poblaciones
+Para calcular las frecuencias Genotípicas (AA, Aa y aa) de la poblacion o poblaciones, utilizaran las funcion llamada `Import_single_loc`,
+esta funcion hace un conteo de cada genotipo por poblacion, utilizando la informacion de presencia `X` y ausencia `O`.
+Obtendremos una matriz llamda `df` que contiene el conteo de cuanto individuos presentan cada uno de los genotipos en la poblacion o poblaciones
 
 ```R
 df1 <- Import_single_loc(Loc1Pops3)
@@ -99,7 +98,7 @@ La tabla `df1` tiene la siguiente estructura:
 | Pop 3 | 7  | 22  | 1   |
 
 
-A partir de la matriz de conteo `df1` , se calcularan las frecuencias genotípicas (AA, Aa y aa ) y alélicas (alelo A y alelo a), utilizando la función Single_locus_frequencies:
+A partir de la matriz de conteo `df1` , se calcularan las frecuencias genotípicas (AA, Aa y aa ) y alélicas (alelo A y alelo a), utilizando la función `Single_locus_frequencies`:
 
 ```R
 
@@ -138,15 +137,15 @@ Obtendran una tabla por todos los resultados, incluyendo el resultado del test c
 ### Finalmente a partir de la matriz de datos de genotipos y alelos "df2" se puede graficar la frecuencia alelica por poblacion utilizando la funcion
 
 - Primero deben reestructurar los datos de las frecuencias genotipicas y alelicas de las poblaciones en la matriz "df2" de manera que R pueda graficarlas
-  para esto utilicen la funcion "RestructureAlleleFreq". Esta funcion manera dos argumentos de estrada primero la matriz de datos y luego Loc = donde se debe
-  el numero de loci que tienen los datos. En este caso Loc = 1. Si fuera un marcador bialelico, Loc = 2.
+  para esto utilicen la funcion `RestructureAlleleFreq`. Esta funcion maneja dos argumentos de estrada, primero la matriz de datos y luego `Loc =` donde se debe
+  indicar el numero de locis que tienen los datos. En este caso `Loc = 1` para un marcador monoloci. Si fuera un marcador bialelico es `Loc = 2`.
 
 
 ```R
 df3 <- RestructureAlleleFreq(df2, Loc = 1)
 
 ```
- - Por ultimo podran graficar la frecuencia alelica utilizando la siguiente funcion
+ - Por ultimo podran graficar la frecuencia alelica se utilizara la siguiente funcion `PlotAlleleFrequency`, donde se debe indicar igualmente el numero de locis. `Loc = 1`
  
 ```R
 
