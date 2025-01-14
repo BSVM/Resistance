@@ -8,7 +8,7 @@
 #'
 #' @details
 #' The function performs several checks to ensure data integrity:
-#' - Validates that the input is a `data.frame`.
+#' - Validates that the input is a `data.frame`
 #' - Ensures the presence of the required columns: `ID`, `Pop`, `AA`, `Aa`, `aa`, `BB`, `Bb`, and `bb`.
 #' - Checks for the absence of `NA` values in the required columns.
 #' - Ensures that each genotype column only contains the values: `X` (indicating the individual has the genotype) and `0` (indicating absence of the genotype).

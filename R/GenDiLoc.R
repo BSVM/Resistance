@@ -95,4 +95,3 @@ GenDiLoc <- function(Data) {
   return(genotype_counts)
 }
 
-
