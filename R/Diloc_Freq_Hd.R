@@ -28,56 +28,59 @@
 #'
 #' @export
 Diloc_Freq_Hd <- function(data) {
-  # Ensure the "Pop" column exists
+  # Verificar que la columna "Pop" exista
   if (!"Pop" %in% colnames(data)) {
-    stop("The 'Pop' column is missing from the data frame.")
+    stop("La columna 'Pop' no existe en el data frame.")
   }
 
-  # Check for missing or NA values
+  # Verificar que no haya valores NA en el data frame
   if (any(is.na(data))) {
-    stop("The data frame contains missing (NA) values.")
+    stop("El data frame contiene valores NA o faltantes.")
   }
 
-  # Check for required genotype columns
+  # Verificar que las columnas necesarias estén presentes
   required_columns <- c("AABB", "AABb", "AAbb", "AaBB", "AaBb", "Aabb", "aaBB", "aaBb", "aabb")
   if (!all(required_columns %in% colnames(data))) {
-    stop("The data frame must contain all genotype columns: ", paste(required_columns, collapse = ", "))
+    stop("El data frame no contiene todas las columnas necesarias.")
   }
 
-  # Ensure genotype columns are numeric and non-negative
+  # Verificar que las columnas de los genotipos sean numéricas y no negativas
   if (any(sapply(data[required_columns], function(x) !is.numeric(x) || any(x < 0)))) {
-    stop("Genotype columns must be numeric and non-negative.")
+    stop("Las columnas de los genotipos deben ser numéricas y no contener valores negativos.")
   }
 
-  # Initialize a list to store results
-  results <- list()
+  # Inicializar una lista para almacenar los resultados
+  resultados <- list()
 
-  # Loop through each population to calculate haplotype frequencies
-  for (i in seq_len(nrow(data))) {
-    # Total number of individuals in the population
-    total_individuals <- sum(data[i, required_columns])
+  # Identificar las columnas de los genotipos
+  N_c <- required_columns
 
-    # Check for zero total individuals
-    if (total_individuals == 0) {
-      stop(paste("Total individuals in population", data$Pop[i], "is zero."))
+  # Iterar sobre cada fila (población)
+  for (i in 1:nrow(data)) {
+    # Sumar las frecuencias de los genotipos específicos en cada población
+    N <- sum(data[i, N_c])
+
+    # Verificar que el número total de individuos no sea cero
+    if (N == 0) {
+      stop(paste("El número total de individuos en la población", data$Pop[i], "es cero."))
     }
 
-    # Calculate haplotype frequencies
-    f_AB <- (2 * data$AABB[i] + data$AABb[i] + data$AaBB[i] + data$AaBb[i]) / (2 * total_individuals)
-    f_Ab <- (2 * data$AAbb[i] + data$AABb[i] + data$Aabb[i] + data$AaBb[i]) / (2 * total_individuals)
-    f_aB <- (2 * data$aaBB[i] + data$AaBB[i] + data$aaBb[i] + data$AaBb[i]) / (2 * total_individuals)
-    f_ab <- (2 * data$aabb[i] + data$Aabb[i] + data$aaBb[i] + data$AaBb[i]) / (2 * total_individuals)
+    # Calcular las frecuencias haplotípicas
+    f_AB <- (2 * data$AABB[i] + data$AABb[i] + data$AaBB[i] + 0.5 * data$AaBb[i]) / (2 * N)
+    f_Ab <- (2 * data$AAbb[i] + data$AABb[i] + data$Aabb[i] + 0.5 * data$AaBb[i]) / (2 * N)
+    f_aB <- (2 * data$aaBB[i] + data$AaBB[i] + data$aaBb[i] + 0.5 * data$AaBb[i]) / (2 * N)
+    f_ab <- (2 * data$aabb[i] + data$Aabb[i] + data$aaBb[i] + 0.5 * data$AaBb[i]) / (2 * N)
 
-    # Store results
-    results[[data$Pop[i]]] <- c(f_AB, f_Ab, f_aB, f_ab)
+    # Almacenar los resultados en la lista
+    resultados[[data$Pop[i]]] <- c(f_AB, f_Ab, f_aB, f_ab)
   }
 
-  # Convert results to a data frame
+  # Devolver los resultados como un data frame
   return(data.frame(
     Pop = data$Pop,
-    AB = sapply(results, `[[`, 1),
-    Ab = sapply(results, `[[`, 2),
-    aB = sapply(results, `[[`, 3),
-    ab = sapply(results, `[[`, 4)
+    AB = sapply(resultados, function(x) x[1]),
+    Ab = sapply(resultados, function(x) x[2]),
+    aB = sapply(resultados, function(x) x[3]),
+    ab = sapply(resultados, function(x) x[4])
   ))
 }
