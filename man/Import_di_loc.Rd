@@ -18,7 +18,7 @@ This function checks the consistency of a genotype matrix and counts the number 
 \details{
 The function performs several checks to ensure data integrity:
 \itemize{
-\item Validates that the input is a \code{data.frame}.
+\item Validates that the input is a \code{data.frame}
 \item Ensures the presence of the required columns: \code{ID}, \code{Pop}, \code{AA}, \code{Aa}, \code{aa}, \code{BB}, \code{Bb}, and \code{bb}.
 \item Checks for the absence of \code{NA} values in the required columns.
 \item Ensures that each genotype column only contains the values: \code{X} (indicating the individual has the genotype) and \code{0} (indicating absence of the genotype).

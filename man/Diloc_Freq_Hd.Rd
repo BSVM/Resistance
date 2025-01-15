@@ -2,20 +2,43 @@
 % Please edit documentation in R/Diloc_Freq_Hd.R
 \name{Diloc_Freq_Hd}
 \alias{Diloc_Freq_Hd}
-\title{Calculate Allele Frequencies for a Biallelic Marker}
+\title{Calculate Allele Frequencies for a Biallelic Marker Across Multiple Populations}
 \usage{
-Diloc_Freq_Hd(data)
+Diloc_Freq_Hd(data, max_iterations = 10, tol = 1e-06, dat = 1)
 }
 \arguments{
-\item{data}{A data frame where each row represents a population, the first column is the population name (\code{Pop}),
-and the remaining columns are genotype counts (\code{AABB}, \code{AABb}, \code{AAbb}, \code{AaBB}, \code{AaBb}, \code{Aabb}, \code{aaBB}, \code{aaBb}, \code{aabb}).}
+\item{data}{A data frame where each row corresponds to a different population. The first column should contain the population names
+(\code{Pop}), and the remaining columns should represent the genotype counts for the following genotypes: \code{AABB}, \code{AABb}, \code{AAbb}, \code{AaBB},
+\code{AaBb}, \code{Aabb}, \code{aaBB}, \code{aaBb}, \code{aabb}.}
+
+\item{max_iterations}{The maximum number of iterations to perform in the estimation process. Default is 15.}
+
+\item{tol}{The tolerance level for convergence. If the change in the correction factors (\code{CorAB_ab} and \code{CorAb_aB})
+between iterations is smaller than this value, the iteration will stop. Default is 1e-6.}
+
+\item{dat}{Specifies which iteration results to return:
+\itemize{
+\item \code{dat = 1} returns only the final results of the last iteration for each population.
+\item \code{dat = 2} returns the full iteration history for each population.
+Default is \code{dat = 1}.
+}}
 }
 \value{
-A data frame with haplotype frequencies (\code{AB}, \code{Ab}, \code{aB}, \code{ab}) for each population.
+A data frame containing the haplotype frequencies (\code{AB}, \code{Ab}, \code{aB}, \code{ab}) for each population.
+The output also includes the iteration number, population name, total sample size (\code{N}), and the correction factors
+(\code{CorAB_ab}, \code{CorAb_aB}) for each iteration.
 }
 \description{
-This function calculates haplotype frequencies for a biallelic genetic marker based on a genotype distribution
-for multiple populations. The input is a data frame with the genotype counts for each population.
+This function computes the haplotype frequencies for a biallelic genetic marker (AB, Ab, aB, ab) in multiple populations
+based on a genotype distribution. The method accounts for genotype counts and utilizes an iterative approach to
+estimate the haplotype frequencies. The results can be returned as the final iteration or with the full iteration history
+for each population. This function is designed to work with a data frame that contains genotype counts for each population.
+}
+\details{
+The function uses a correction approach to estimate haplotype frequencies.
+The iterative process aims to converge by adjusting the correction factors (\code{CorAB_ab} and \code{CorAb_aB}) until their change
+between iterations is smaller than the specified tolerance (\code{tol}). The iteration history can be useful for assessing convergence
+behavior or troubleshooting the process.
 }
 \examples{
 # Create a data frame with genotype counts for three populations
@@ -33,6 +56,6 @@ DicGtps <- data.frame(
 )
 
 # Calculate haplotype frequencies for the data frame
-Diloc_Freq_Hd(DicGtps)
+Diloc_Freq_Hd(DicGtps, max_iterations = 10, tol = 1e-6, dat = 1)
 
 }
