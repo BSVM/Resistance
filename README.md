@@ -19,7 +19,7 @@ Cargue el paquete devtools para instalar paquetes desde GitHub:
 ```R
 library(devtools)
 ```
-### Paso 3: Instalar el paquete Resistance
+## Paso 3: Instalar el paquete Resistance
 
 Instale el paquete Resistance directamente desde GitHub y cargue el mismo:
 
@@ -60,7 +60,7 @@ Nota: Opcionalmente el paquete proporciona una matriz de datos "Loc1Pops3" para 
 print (Loc1Pops3) # Muestra la estructura de los datos originales
 
 ```
-### Estructura de los datos originales
+## Estructura de los datos originales
 
 La tabla `Loc1Pops3` tiene la siguiente estructura:
 
@@ -159,7 +159,7 @@ df3 <- RestructureAlleleFreq(df2, Loc = 1)
 
 
 
-### Ejemplo de uso practico para analizar datos de mutacions KDR bialelicas
+# Ejemplo de uso practico para analizar datos de mutacions KDR bialelicas
 
 Para calcular las frecuencias Genotípicas (AABB, AABb, AAbb, AaBB, AaBb, Aabb, aaBB, aaBb y aabb) de la poblacion o poblaciones, utilizaran las funcion llamada `Import_single_loc`,
 esta funcion hace un conteo de cada genotipo por poblacion, utilizando la informacion de presencia `X` y ausencia `O`.
