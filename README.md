@@ -176,8 +176,7 @@ La tabla `dw1` tiene la siguiente estructura:
 | Pop   | AA | Aa | aa | BB | Bb | bb |
 |-------|----|----|----|----|----|----|
 | Pop 1 |  4 | 33 |  3 |  3 |  1 |  1 |
-| Pop 2 |  2 | 39 |  0![Rplot01](https://github.com/user-attachments/assets/989da17e-32c8-4d01-beab-18df0b73be3a)
- |  0 |  0 |  0 |
+| Pop 2 |  2 | 39 |  0 |  0 |  0 |  0 |
 | Pop 3 |  7 | 22 |  1 |  1 |  7 |  0 |
 
 ## dw1$$DicGtps
