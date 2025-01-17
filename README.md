@@ -156,7 +156,10 @@ df3 <- RestructureAlleleFreq(df2, Loc = 1)
   <img src="https://github.com/user-attachments/assets/883f2b5a-f157-40ba-9b43-aee0d6574405" alt="Rplot" width="50%">
 </div>
 
-## Ejemplo de uso practico para analizar datos de mutacions KDR bialelicas
+
+
+
+### Ejemplo de uso practico para analizar datos de mutacions KDR bialelicas
 
 Para calcular las frecuencias Genotípicas (AABB, AABb, AAbb, AaBB, AaBb, Aabb, aaBB, aaBb y aabb) de la poblacion o poblaciones, utilizaran las funcion llamada `Import_single_loc`,
 esta funcion hace un conteo de cada genotipo por poblacion, utilizando la informacion de presencia `X` y ausencia `O`.
