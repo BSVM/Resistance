@@ -230,7 +230,7 @@ prin(dw2)
 ```
 
 
-## dw2 muestra el resultado de la frecuencia haplotipicas para cada poblacion, indicando en que iteracion el calculo converge y el valor de correcion utilizado.
+### dw2 muestra el resultado de la frecuencia haplotipicas para cada poblacion, indicando en que iteracion el calculo converge y el valor de correcion utilizado.
 
 | Iter     | Pop   | N  | AB       | Ab         | aB       | ab        | CorAB_ab   | CorAb_aB   |
 |----------|-------|----|----------|------------|----------|-----------|------------|------------|
