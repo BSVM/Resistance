@@ -156,3 +156,80 @@ df3 <- RestructureAlleleFreq(df2, Loc = 1)
   <img src="https://github.com/user-attachments/assets/883f2b5a-f157-40ba-9b43-aee0d6574405" alt="Rplot" width="50%">
 </div>
 
+## Ejemplo de uso practico para analizar datos de mutacions KDR bialelicas
+
+Para calcular las frecuencias Genotípicas (AABB, AABb, AAbb, AaBB, AaBb, Aabb, aaBB, aaBb y aabb) de la poblacion o poblaciones, utilizaran las funcion llamada `Import_single_loc`,
+esta funcion hace un conteo de cada genotipo por poblacion, utilizando la informacion de presencia `X` y ausencia `O`.
+Obtendremos una matriz llamda `dw1` que contiene el conteo de cuanto individuos presentan cada uno de los genotipos en la poblacion o poblaciones
+
+```R
+
+dw1 <- Import_di_loc(Loc2Pops3)
+
+print(dw1)
+
+```
+La tabla `dw1` tiene la siguiente estructura:
+
+## dw1$$MonGts
+
+| Pop   | AA | Aa | aa | BB | Bb | bb |
+|-------|----|----|----|----|----|----|
+| Pop 1 |  4 | 33 |  3 |  3 |  1 |  1 |
+| Pop 2 |  2 | 39 |  0![Rplot01](https://github.com/user-attachments/assets/989da17e-32c8-4d01-beab-18df0b73be3a)
+ |  0 |  0 |  0 |
+| Pop 3 |  7 | 22 |  1 |  1 |  7 |  0 |
+
+## dw1$$DicGtps
+
+| Pop   | AABB | AABb | AAbb | AaBB | AaBb | Aabb | aaBB | aaBb | aabb |
+|-------|------|------|------|------|------|------|------|------|------|
+| Pop 1 |    4 |    0 |    0 |   32 |    1 |    0 |    2 |    0 |    1 |
+| Pop 2 |    2 |    0 |    0 |   39 |    0 |    0 |    0 |    0 |    0 |
+| Pop 3 |    5 |    2 |    0 |   17 |    5 |    0 |    1 |    0 |    0 |
+
+
+A partir de la matriz de conteo dw1$DicGtps, se calcularán las frecuencias alélicas (AB, Ab, aB y ab) utilizando la función `Diloc_Freq_Hd`. El cálculo haplotípico se realiza mediante un sistema de corrección que ajusta los haplotipos ambiguos generados por los genotipos heterocigotos AaBb.
+
+El proceso comienza con una estimación inicial de las frecuencias haplotípicas, y cada iteración posterior refina estos cálculos utilizando una función de maximización. El número de iteraciones se define mediante el parámetro `max_iterations`, mientras que `tol = 1e-06` establece el nivel de tolerancia para la convergencia del modelo. Además, el argumento `dat` permite visualizar los resultados de las frecuencias haplotípicas, ya sea únicamente para la última iteración `dat = 1` o para todas las iteraciones en cada población `dat = 2`.
+
+```R
+
+dw2 <- Diloc_Freq_Hd(dw1$DicGtps, max_iterations = 10, tol = 1e-06, dat = 1)
+
+prin(dw2)
+
+```
+
+
+## dw2 muestra el resultado de la frecuencia haplotipicas para cada poblacion, indicando en que iteracion el calculo converge y el valor de correcion utilizado.
+
+| Iter     | Pop   | N  | AB       | Ab         | aB       | ab        | CorAB_ab   | CorAb_aB   |
+|----------|-------|----|----------|------------|----------|-----------|------------|------------|
+| 10       | Pop 1 | 40 | 0.5124999 | 1.048488e-07 | 0.4500001 | 0.03749990 | 0.9999975 | 2.454997e-06 |
+| Initial  | Pop 2 | 41 | 0.5243902 | 0.000000e+00 | 0.4756098 | 0.00000000 | NA         | NA         |
+| 10       | Pop 3 | 30 | 0.4992645 | 1.007355e-01 | 0.3840689 | 0.01593112 | 0.1705252 | 8.294748e-01 |
+
+- Se debe reestructurar los datos de las frecuencias genotipicas y alelicas de las poblaciones en la matriz "dw2" de manera que R pueda graficarlas
+  para esto utilicen la funcion `RestructureAlleleFreq`. Esta funcion maneja dos argumentos de estrada, primero la matriz de datos y luego `Loc =` donde se debe
+  indicar el numero de locis que tienen los datos. En este caso `Loc = 2` para un marcador de dos loci. Si fuera un marcador monoalelico es `Loc = 1`.
+
+```R
+
+dw3 <- RestructureAlleleFreq(dw2, Loc = 2)
+
+dw3
+
+```
+
+- Por ultimo podran graficar la frecuencia alelica se utilizara la siguiente funcion `PlotAlleleFrequency`, donde se debe indicar igualmente el numero de locis. `Loc = 2`
+ 
+```R
+
+ PlotAlleleFrequency(dw3, Loc = 2)
+
+```
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/01b2f176-e0a2-4ea7-a512-16345fa82768" alt="Rplot" width="50%">
+</div>
+
