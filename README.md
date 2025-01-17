@@ -157,7 +157,7 @@ df3 <- RestructureAlleleFreq(df2, Loc = 1)
 </div>
 
 
-
+#
 
 # Ejemplo de uso practico para analizar datos de mutacions KDR bialelicas
 
