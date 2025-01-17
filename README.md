@@ -161,7 +161,33 @@ df3 <- RestructureAlleleFreq(df2, Loc = 1)
 
 # Ejemplo de uso practico para analizar datos de mutacions KDR bialelicas
 
-Para calcular las frecuencias Genotípicas (AABB, AABb, AAbb, AaBB, AaBb, Aabb, aaBB, aaBb y aabb) de la poblacion o poblaciones, utilizaran las funcion llamada `Import_single_loc`,
+## Estructura de los datos originales
+
+La tabla `Loc2Pops3` tiene la siguiente estructura:
+
+```R
+
+Print(Loc2Pops3)
+
+```
+## Frecuencias Genotípicas por Población
+
+| ID      | Pop   | AA  | Aa  | aa  | BB  | Bb  | bb  |
+|---------|-------|-----|-----|-----|-----|-----|-----|
+| Cur 1   | Pop 1 | 0   | X   | 0   | X   | 0   | 0   |
+| Cur 2   | Pop 1 | 0   | X   | 0   | X   | 0   | 0   |
+| Cur 3   | Pop 1 | 0   | X   | 0   | X   | 0   | 0   |
+| Cur 4   | Pop 1 | 0   | X   | 0   | X   | 0   | 0   |
+| Cur 5   | Pop 1 | 0   | X   | 0   | X   | 0   | 0   |
+| Cur 6   | Pop 1 | 0   | X   | 0   | X   | 0   | 0   |
+| Cur 7   | Pop 1 | 0   | X   | 0   | X   | 0   | 0   |
+| Cur 8   | Pop 1 | 0   | X   | 0   | X   | 0   | 0   |
+| Cur 9   | Pop 1 | 0   | X   | 0   | X   | 0   | 0   |
+| Cur 10  | Pop 1 | 0   | X   | 0   | X   | 0   | 0   |
+| ...     | ...   | ... | ... | ... | ... | ... | ... |
+
+
+Para calcular las frecuencias Genotípicas (AABB, AABb, AAbb, AaBB, AaBb, Aabb, aaBB, aaBb y aabb) de la poblacion o poblaciones, utilizaran las funcion llamada `Import_di_loc`,
 esta funcion hace un conteo de cada genotipo por poblacion, utilizando la informacion de presencia `X` y ausencia `O`.
 Obtendremos una matriz llamda `dw1` que contiene el conteo de cuanto individuos presentan cada uno de los genotipos en la poblacion o poblaciones
 
