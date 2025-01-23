@@ -4,7 +4,7 @@
 \alias{Diloc_Freq_Hd}
 \title{Calculate Allele Frequencies for a Biallelic Marker Across Multiple Populations}
 \usage{
-Diloc_Freq_Hd(data, max_iterations = 10, tol = 1e-06, dat = 1)
+Diloc_Freq_Hd(data, max_iterations = 10, tol = 1e-06, dat = 10)
 }
 \arguments{
 \item{data}{A data frame where each row corresponds to a different population. The first column should contain the population names

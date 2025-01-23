@@ -47,35 +47,43 @@
 #' Diloc_Freq_Hd(DicGtps, max_iterations = 10, tol = 1e-6, dat = 1)
 #'
 #' @export
-Diloc_Freq_Hd <- function(data, max_iterations = 10, tol = 1e-6, dat = 1) {
-  # Check if the "Pop" column exists
+Diloc_Freq_Hd <- function(data, max_iterations = 10, tol = 1e-6, dat = 10) {
+  # Check if the 'Pop' column exists
   if (!"Pop" %in% colnames(data)) {
     stop("The 'Pop' column does not exist in the data frame.")
   }
 
-  # Check if there are any NA values in the data frame
+  # Check for NA values in the data frame
   if (any(is.na(data))) {
     stop("The data frame contains NA or missing values.")
   }
 
-  # Check if the necessary columns are present
+  # Check if the required columns are present
   required_columns <- c("AABB", "AABb", "AAbb", "AaBB", "AaBb", "Aabb", "aaBB", "aaBb", "aabb")
   if (!all(required_columns %in% colnames(data))) {
-    stop("The data frame does not contain all the necessary columns.")
+    stop("The data frame does not contain all the required columns.")
   }
 
   # Check if the genotype columns are numeric and non-negative
   if (any(sapply(data[required_columns], function(x) !is.numeric(x) || any(x < 0)))) {
-    stop("The genotype columns must be numeric and contain no negative values.")
+    stop("The genotype columns must be numeric and cannot contain negative values.")
   }
 
-  # Initialize a list to store the results of all iterations
-  all_results <- list()
+  # Create a data frame to store genotype frequencies
+  genotype_frequencies <- data.frame(matrix(ncol = 10, nrow = 0))
+  colnames(genotype_frequencies) <- c("Pop", "AABB", "AABb", "AAbb", "AaBB", "AaBb", "Aabb", "aaBB", "aaBb", "aabb")
 
-  # Identify the genotype columns
+  # Calculate genotype frequencies
+  for (i in 1:nrow(data)) {
+    total <- sum(data[i, 2:10])
+    genotype_frequencies[i, 1] <- data$Pop[i]
+    genotype_frequencies[i, 2:10] <- data[i, 2:10] / total
+  }
+
+  # Initialize a list to store haplotype results
+  all_results <- list()
   N_c <- required_columns
 
-  # Define an internal function to calculate haplotype frequencies
   calc_freqs <- function(data, i, CorAB_ab, CorAb_aB) {
     N <- sum(data[i, N_c])
     f_AB <- (2 * data$AABB[i] + data$AABb[i] + data$AaBB[i] + CorAB_ab * data$AaBb[i]) / (2 * N)
@@ -85,57 +93,49 @@ Diloc_Freq_Hd <- function(data, max_iterations = 10, tol = 1e-6, dat = 1) {
     return(c(f_AB, f_Ab, f_aB, f_ab))
   }
 
-  # Iterate over each row (population)
+  # Calculate haplotype frequencies for each population
   for (i in 1:nrow(data)) {
-    # Initialize correction values for the first iteration
     CorAB_ab <- 0.5
     CorAb_aB <- 0.5
-
     iter_results <- data.frame(Iter = integer(), Pop = character(), N = integer(), AB = numeric(), Ab = numeric(), aB = numeric(), ab = numeric(), CorAB_ab = numeric(), CorAb_aB = numeric())
-
-    # Save the initial population values
     initial_freqs <- calc_freqs(data, i, CorAB_ab, CorAb_aB)
 
+    # Save the first haplotype calculation
+    iter_results <- rbind(iter_results, data.frame(Iter = 0, Pop = data$Pop[i], N = sum(data[i, N_c]), AB = initial_freqs[1], Ab = initial_freqs[2], aB = initial_freqs[3], ab = initial_freqs[4], CorAB_ab = CorAB_ab, CorAb_aB = CorAb_aB))
+
+    # Perform iterations only if there are no issues
+    problematic <- FALSE
     for (iter in 1:max_iterations) {
       N <- sum(data[i, N_c])
-
-      # Calculate the haplotype frequencies
       freqs <- calc_freqs(data, i, CorAB_ab, CorAb_aB)
 
-      # Calculate the ambiguity error for each population independently
-      k1 <- 2 * freqs[1] * freqs[4] # AB/ab
-      k2 <- 2 * freqs[2] * freqs[3] # Ab/aB
+      k1 <- 2 * freqs[1] * freqs[4]
+      k2 <- 2 * freqs[2] * freqs[3]
 
-      # Check if k1 + k2 is zero, which may be problematic
-      if ((k1 + k2) != 0) {
-        new_CorAB_ab <- k1 / (k1 + k2) # AB/ab
-        new_CorAb_aB <- k2 / (k1 + k2) # Ab/aB
-      } else {
-        new_CorAB_ab <- NA
-        new_CorAb_aB <- NA
-        # Display initial frequency values for the population with the error
-        message(paste("Population", data$Pop[i], "has problematic frequency values in iteration", iter))
-        message(paste("Initial frequencies: AB =", initial_freqs[1], "Ab =", initial_freqs[2], "aB =", initial_freqs[3], "ab =", initial_freqs[4]))
-
-        # Store the initial population values in the final results
-        iter_results <- rbind(iter_results, data.frame(Iter = "Initial", Pop = data$Pop[i], N = N, AB = initial_freqs[1], Ab = initial_freqs[2], aB = initial_freqs[3], ab = initial_freqs[4], CorAB_ab = NA, CorAb_aB = NA))
-        break  # Exit the loop and continue with the next population
-      }
-
-      # Store the results of the current iteration
-      iter_results <- rbind(iter_results, data.frame(Iter = iter, Pop = data$Pop[i], N = N, AB = freqs[1], Ab = freqs[2], aB = freqs[3], ab = freqs[4], CorAB_ab = new_CorAB_ab, CorAb_aB = new_CorAb_aB))
-
-      # Check for convergence
-      if (!is.na(new_CorAB_ab) && !is.na(new_CorAb_aB) && abs(new_CorAB_ab - CorAB_ab) < tol && abs(new_CorAb_aB - CorAb_aB) < tol) {
+      if ((k1 + k2) == 0) {
+        problematic <- TRUE
+        warning(paste("Population", data$Pop[i], "has problematic values in iteration", iter))
         break
       }
 
-      # Update correction values for the next iteration
+      new_CorAB_ab <- k1 / (k1 + k2)
+      new_CorAb_aB <- k2 / (k1 + k2)
+
+      iter_results <- rbind(iter_results, data.frame(Iter = iter, Pop = data$Pop[i], N = N, AB = freqs[1], Ab = freqs[2], aB = freqs[3], ab = freqs[4], CorAB_ab = new_CorAB_ab, CorAb_aB = new_CorAb_aB))
+
+      if (abs(new_CorAB_ab - CorAB_ab) < tol && abs(new_CorAb_aB - CorAb_aB) < tol) {
+        break
+      }
+
       CorAB_ab <- new_CorAB_ab
       CorAb_aB <- new_CorAb_aB
     }
 
-    # Store the results of all iterations or only the last one, depending on the `dat` parameter
+    # If the population is problematic, use only the first calculation
+    if (problematic) {
+      iter_results <- iter_results[1, ]  # Use only the first row (initial calculation)
+    }
+
     if (dat == 2) {
       all_results[[data$Pop[i]]] <- iter_results
     } else {
@@ -143,8 +143,7 @@ Diloc_Freq_Hd <- function(data, max_iterations = 10, tol = 1e-6, dat = 1) {
     }
   }
 
-  # Combine the results of all populations into a single data frame
-  final_results <- do.call(rbind, all_results)
+  final_haplotypes <- do.call(rbind, all_results)
 
-  return(final_results)
+  return(list(Genotype_Frequencies = genotype_frequencies, Haplotype_Frequencies = final_haplotypes))
 }

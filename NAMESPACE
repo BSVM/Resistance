@@ -3,6 +3,7 @@
 export(Diloc_Freq_Hd)
 export(GenDiLoc)
 export(HWQL1)
+export(HWQL2)
 export(Hap_DilocusfreqforYear)
 export(Import_di_loc)
 export(Import_single_loc)
