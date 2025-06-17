@@ -1,46 +1,49 @@
-# Instalación y uso del Paquete `Resistance`
+# Installation and Usage of the Resistance Package
 
-Este documento proporciona instrucciones para instalar y utilizar el paquete `Resistance` desde GitHub. También incluye un ejemplo práctico de algunas de sus funciones principales.
+This document provides comprehensive instructions for installing and utilizing the `Resistance` R package for population genetic analysis of kdr mutations. The package standardizes statistical methods for calculating genotypic/allelic frequencies and implements classical population genetics analyses.
 
-## Instalación
+## Installation
 
-### Paso 1: Instalar `devtools` (si no está instalado)
-
-Asegúrese de tener instalado el paquete `devtools`. Puede verificarlo y, si es necesario, instalarlo ejecutando el siguiente código en R:
-
+### Step 1: Install `devtools` (if not present)
 ```R
 if (!requireNamespace("devtools", quietly = TRUE)) {
   install.packages("devtools")
 }
+
 ```
-### Paso 2: Cargar el paquete devtools
-Cargue el paquete devtools para instalar paquetes desde GitHub:
+Step 2: Load devtoolss
+
 
 ```R
 library(devtools)
 ```
-## Paso 3: Instalar el paquete Resistance
-
-Instale el paquete Resistance directamente desde GitHub y cargue el mismo:
+Step 3: Install Resistance Package
+mismo:
 
 
 ```R
-devtools::install_github("BSVM/Resistance") # Instalacion del paquete desde el depositorio github
+devtools::install_github("BSVM/Resistance")
 
-library(Resistance) # Activacion del paquete
+library(Resistance) 
 
 ```
 
-## Ejemplo de uso practico para analizar datos de mutacions KDR
+## Practical Example: Analyzing kdr Mutation Dat
 
-A continuación, se presenta un ejemplo práctico que demuestra cómo utilizar algunas de las funciones del paquete Resistance
-Para cargar datos de mutaciones kdr de un loci.
+Below is a practical example demonstrating how to use key functions in the Resistance package.
 
-# Ejemplo 1: Análisis de Genotipos de 12 Individuos
+# Example 1: Genotype Analysis of 12 Individuals
 Crear un DataFrame con los Genotipos
 
-El siguiente código crea un data.frame que representa que genotipo presenta cada individuo con una "X", el "0" indica ausencia.
-Los genotipos se representan como AA: Genotipo homocigoto dominante, Aa: Genotipo heterocigoto y aa: Genotipo homocigoto recesivo.
+
+This code creates a data frame where each row corresponds to an individual. The presence of a genotype is marked with "X" and absence with 0.
+
+AA: Homozygous dominant
+
+Aa: Heterozygous
+
+aa: Homozygous recessive
+
 ```R
 
 df <- data.frame(
@@ -54,15 +57,14 @@ print(df)
 
 ```
 
-Nota: Opcionalmente el paquete proporciona una matriz de datos "Loc1Pops3" para multiples poblaciones, esta puede ser cargada utilizando: 
+Note: The package also provides a built-in dataset Loc1Pops3 with multiple populations, which can be accessed as follows:
 ```R
 
-print (Loc1Pops3) # Muestra la estructura de los datos originales
+print (Loc1Pops3)
 
 ```
-## Estructura de los datos originales
+## Data Structure of Loc1Pops3s
 
-La tabla `Loc1Pops3` tiene la siguiente estructura:
 
 | ID     | Pop   | AA   | Aa   | aa   |
 |--------|-------|------|------|------|
